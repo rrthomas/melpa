@@ -50,6 +50,20 @@ CHANNEL_CONFIG := "(progn\
   (setq package-build-release-version-functions\
         '(package-build-tag-version))\
   (setq package-build-badge-data '(\"melpa stable\" \"\#3e999f\")))"
+
+else ifeq ($(MELPA_CHANNEL), snapshot)
+# This is an experimental channel, which may
+# eventually replace the "unstable" channel.
+PKGDIR  := packages-snapshot
+HTMLDIR := html-snapshot
+CHANNEL_CONFIG := "(progn\
+  (setq package-build-stable nil)\
+  (setq package-build-snapshot-version-functions\
+        '(package-build-release+count-version))\
+  (setq package-build-release-version-functions\
+        '(package-build-tag-version\
+          package-build-header-version))\
+  (setq package-build-badge-data '(\"snapshot\" \"\#30a14e\")))"
 endif
 
 # You probably don't want to change this.
@@ -133,6 +147,7 @@ clean-sandbox:
 clean: .FORCE
 	MELPA_CHANNEL=unstable make clean-packages clean-json clean-sandbox
 	MELPA_CHANNEL=stable   make clean-packages clean-json clean-sandbox
+	MELPA_CHANNEL=snapshot make clean-packages clean-json clean-sandbox
 
 ## Update package-build
 
