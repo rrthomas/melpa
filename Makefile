@@ -64,6 +64,21 @@ CHANNEL_CONFIG := "(progn\
         '(package-build-tag-version\
           package-build-header-version))\
   (setq package-build-badge-data '(\"snapshot\" \"\#30a14e\")))"
+
+else ifeq ($(MELPA_CHANNEL), release)
+# This is an experimental channel, which may
+# eventually replace the "stable" channel.
+PKGDIR  := packages-release
+HTMLDIR := html-release
+CHANNEL_CONFIG := "(progn\
+  (setq package-build-stable t)\
+  (setq package-build-snapshot-version-functions\
+        '(package-build-release+count-version))\
+  (setq package-build-release-version-functions\
+        '(package-build-tag-version\
+          package-build-header-version\
+          package-build-fallback-count-version))\
+  (setq package-build-badge-data '(\"release\" \"\#9be9a8\")))"
 endif
 
 # You probably don't want to change this.
@@ -148,6 +163,7 @@ clean: .FORCE
 	MELPA_CHANNEL=unstable make clean-packages clean-json clean-sandbox
 	MELPA_CHANNEL=stable   make clean-packages clean-json clean-sandbox
 	MELPA_CHANNEL=snapshot make clean-packages clean-json clean-sandbox
+	MELPA_CHANNEL=release  make clean-packages clean-json clean-sandbox
 
 ## Update package-build
 
